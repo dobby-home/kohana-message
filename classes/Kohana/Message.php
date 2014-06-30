@@ -84,7 +84,6 @@ class Kohana_Message {
             $message = $message[0];
         }
         $message = trim($message);
-
         if ($message != '') {
             if (function_exists('___')) {
                 $message = ___($message, $values);
@@ -94,7 +93,7 @@ class Kohana_Message {
         if (is_numeric($code)) {
             $mess['code'] = $code;
             $mess['mess'] = trim(preg_replace('/[\s]+/', ' ', $message));
-            $type = trim($type) == '' ? 'igeneral' : $type;
+            $type = trim($type) == '' ? 'general' : $type;
 
             $mess['type'] = $type;
             $this->message[] = $mess;
@@ -109,15 +108,15 @@ class Kohana_Message {
             $f = false;
             if (isset($code['_external'])) {
                 foreach ($code['_external'] as $key => $value) {
-                    $this->add(100, __($value), 'i' . $key);
+                    $this->add(100, __($value),  $key);
                     $f = true;
                 }
             } else {
                 foreach ($code as $key => $value) {
                     if (is_array($value)) {
-                        $this->add(100, __($value[0]), 'i' . $key);
+                        $this->add(100, __($value[0]), $key);
                     } else {
-                        $this->add(100, __($value), 'i' . $key);
+                        $this->add(100, __($value),  $key);
                     }
                     $f = true;
                 }
@@ -149,9 +148,9 @@ class Kohana_Message {
                 $error = explode(':', $str);
 
                 if (isset($error[1])) {
-                    $this->add(101, $error[1], 'ibd');
+                    $this->add(101, $error[1], 'bd');
                 } else {
-                    $this->add(101, $error[0], 'ibd');
+                    $this->add(101, $error[0], 'bd');
                 }
             }
         }
@@ -188,6 +187,7 @@ class Kohana_Message {
      */
     public function out($die = false, $type = 'json') {
         $resp = Response::factory();
+
         $resp->status($this->httpstatus);
         $resp->send_headers();
 
