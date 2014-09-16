@@ -127,31 +127,16 @@ class Kohana_Message {
 
         } elseif (is_string($code) && $code != '') {
 
-            $str = $code;
-            $start = strpos($str, 'ERROR:') + 6;
-            $leng = strpos($str, 'CONTEXT:');
 
-            if ($leng !== false) {
-                $leng -= $start;
-            } else {
-                $leng = null;
-            }
-            //Если ошибка пришла из базы postgres
+            $mess['code'] = $code;
+            $mess['mess'] = trim(preg_replace('/[\s]+/', ' ', $message));
+            $type = trim($type) == '' ? 'general' : $type;
 
-            if ($start !== false) {
+            $mess['type'] = $type;
+            $this->message[] = $mess;
 
-                if ($leng) {
-                    $str = substr($str, $start, $leng);
-                } else {
-                    $str = substr($str, $start);
-                }
-                $error = explode(':', $str);
-
-                if (isset($error[1])) {
-                    $this->add(101, $error[1], 'bd');
-                } else {
-                    $this->add(101, $error[0], 'bd');
-                }
+            if (!self::$only200 && !is_null($status)) {
+                $this->httpstatus = $status;
             }
         }
     }
